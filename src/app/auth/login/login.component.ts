@@ -7,7 +7,7 @@ import { tap } from "rxjs/operators";
 
 import { AppState } from "../reducers";
 import { AuthService } from "../auth.service";
-import { login } from "../auth.actions";
+import { AuthActions } from "../action-types";
 
 @Component({
   selector: "login",
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
           console.log(user);
           this.store.dispatch(
             //wywołanie stworzonej w auth.actions.ts akcji
-            login({ user })
+            AuthActions.login({ user })
           );
           this.router.navigateByUrl("/courses");
         })
