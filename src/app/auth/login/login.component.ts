@@ -5,7 +5,7 @@ import { Store } from "@ngrx/store";
 import { noop } from "rxjs";
 import { tap } from "rxjs/operators";
 
-import { AppState } from "../reducers";
+import { AuthState } from "../reducers";
 import { AuthService } from "../auth.service";
 import { AuthActions } from "../action-types";
 
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private store: Store<AppState>
+    private store: Store<AuthState>
   ) {
     this.form = fb.group({
       email: ["test@angular-university.io", [Validators.required]],
