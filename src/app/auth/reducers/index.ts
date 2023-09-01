@@ -16,5 +16,12 @@ export const authReducer = createReducer(
     return {
       user: action.user,
     };
+  }),
+  on(AuthActions.logout, (_1, _2) => {
+    //ważne jest zwracać nową referencję a nie mutować, szczególnie
+    //przy stosowaniu startegii OnPush i programowaniu reaktywnym
+    return {
+      user: undefined,
+    };
   })
 );
