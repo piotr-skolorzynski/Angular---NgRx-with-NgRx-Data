@@ -1,9 +1,11 @@
-import { createSelector } from "@ngrx/store";
+import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { AuthState } from "./reducers";
 
-//posiada własną pamięć także
+export const selectAuthState = createFeatureSelector<AuthState>("auth");
+
 export const isLoggedIn = createSelector(
-  (state) => state["auth"], //mapuj auth state
-  (authState) => !!authState.user //sprawdź czy user istnieje
+  selectAuthState,
+  (authState) => !!authState.user
 );
 
 export const isLoggedOut = createSelector(isLoggedIn, (loggedIn) => !loggedIn);
