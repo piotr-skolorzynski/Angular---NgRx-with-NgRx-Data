@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
-import { Course } from "./model/course";
 import {
   ActivatedRouteSnapshot,
   Resolve,
   RouterStateSnapshot,
 } from "@angular/router";
 import { Observable } from "rxjs";
-import { Store } from "@ngrx/store";
+import { Store, select } from "@ngrx/store";
 import { AppState } from "../auth/reducers";
-import { finalize, first, tap } from "rxjs/operators";
+import { finalize, first, tap, filter } from "rxjs/operators";
 import { loadAllCourses } from "./courses.actions";
+import { areCoursesLoaded } from "./courses.selectors";
 
 @Injectable()
 export class CoursesResolver implements Resolve<any> {
@@ -22,16 +22,15 @@ export class CoursesResolver implements Resolve<any> {
     state: RouterStateSnapshot
   ): Observable<any> {
     return this.store.pipe(
-      tap(() => {
-        //flaga zabezpiecza przed równolełym odpaleniu zapytania
-        if (!this.loading) {
+      select(areCoursesLoaded),
+      tap((coursesLoaded) => {
+        if (!this.loading && !coursesLoaded) {
           this.loading = true;
           this.store.dispatch(loadAllCourses());
         }
       }),
-      first(), //ten operator w tej implementacji służy do
-      //wymuszenia zakończenia subskrybcji, tylko wtedy router
-      //zakończy przejście do wybranego komponentu
+      filter((coursesLoaded) => coursesLoaded),
+      first(),
       finalize(() => (this.loading = false))
     );
   }
