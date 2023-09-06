@@ -5,33 +5,17 @@ import {
   RouterStateSnapshot,
 } from "@angular/router";
 import { Observable } from "rxjs";
-import { Store, select } from "@ngrx/store";
-import { AppState } from "../auth/reducers";
-import { finalize, first, tap, filter } from "rxjs/operators";
-import { loadAllCourses } from "./courses.actions";
-import { areCoursesLoaded } from "./courses.selectors";
+import { map } from "rxjs/operators";
+import { CourseEntityService } from "./services/course-entity.service";
 
 @Injectable()
-export class CoursesResolver implements Resolve<any> {
-  loading = false;
-
-  constructor(private store: Store<AppState>) {}
+export class CoursesResolver implements Resolve<boolean> {
+  constructor(private coursesService: CourseEntityService) {}
 
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<any> {
-    return this.store.pipe(
-      select(areCoursesLoaded),
-      tap((coursesLoaded) => {
-        if (!this.loading && !coursesLoaded) {
-          this.loading = true;
-          this.store.dispatch(loadAllCourses());
-        }
-      }),
-      filter((coursesLoaded) => coursesLoaded),
-      first(),
-      finalize(() => (this.loading = false))
-    );
+  ): Observable<boolean> {
+    return this.coursesService.getAll().pipe(map((courses) => !!courses));
   }
 }

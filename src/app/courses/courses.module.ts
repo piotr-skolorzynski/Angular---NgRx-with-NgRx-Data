@@ -35,6 +35,10 @@ import { CoursesEffects } from "./courses.effects";
 import { StoreModule } from "@ngrx/store";
 import { coursesReducer } from "./reducers/course.reducers";
 import { CourseEntityService } from "./services/course-entity.service";
+import {
+  CourseDataService,
+  CoursesDataService,
+} from "./services/courses-data.service";
 
 export const coursesRoutes: Routes = [
   {
@@ -47,6 +51,9 @@ export const coursesRoutes: Routes = [
   {
     path: ":courseUrl",
     component: CourseComponent,
+    resolve: {
+      courses: CoursesResolver,
+    },
   },
 ];
 
@@ -87,11 +94,18 @@ const entityMetada: EntityMetadataMap = {
     CoursesCardListComponent,
     EditCourseDialogComponent,
     CourseComponent,
+    CourseDataService,
   ],
   providers: [CoursesHttpService, CoursesResolver, CourseEntityService],
 })
 export class CoursesModule {
-  constructor(private eds: EntityDefinitionService) {
+  constructor(
+    private eds: EntityDefinitionService,
+    private entityDataService: EntityDataService,
+    private coursesDataService: CoursesDataService
+  ) {
     eds.registerMetadataMap(entityMetada);
+
+    entityDataService.registerService("Course", coursesDataService);
   }
 }
