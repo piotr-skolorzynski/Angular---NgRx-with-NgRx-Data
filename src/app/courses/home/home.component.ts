@@ -13,6 +13,7 @@ import {
   selectBeginnerCourses,
   selectPromoTotal,
 } from "../courses.selectors";
+import { CourseEntityService } from "../services/course-entity.service";
 
 @Component({
   selector: "home",
@@ -28,8 +29,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private coursesHttpService: CoursesHttpService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private coursesService: CourseEntityService
   ) {}
 
   ngOnInit() {
@@ -37,9 +38,15 @@ export class HomeComponent implements OnInit {
   }
 
   reload() {
-    this.beginnerCourses$ = this.store.pipe(select(selectBeginnerCourses));
-    this.advancedCourses$ = this.store.pipe(select(selectAdvancedCourses));
-    this.promoTotal$ = this.store.pipe(select(selectPromoTotal));
+    this.beginnerCourses$ = this.coursesService.entities$.pipe(
+      select(selectBeginnerCourses)
+    );
+    this.advancedCourses$ = this.coursesService.entities$.pipe(
+      select(selectAdvancedCourses)
+    );
+    this.promoTotal$ = this.coursesService.entities$.pipe(
+      select(selectPromoTotal)
+    );
   }
 
   onAddCourse() {

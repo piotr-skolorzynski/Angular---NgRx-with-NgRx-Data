@@ -35,10 +35,7 @@ import { CoursesEffects } from "./courses.effects";
 import { StoreModule } from "@ngrx/store";
 import { coursesReducer } from "./reducers/course.reducers";
 import { CourseEntityService } from "./services/course-entity.service";
-import {
-  CourseDataService,
-  CoursesDataService,
-} from "./services/courses-data.service";
+import { CoursesDataService } from "./services/courses-data.service";
 
 export const coursesRoutes: Routes = [
   {
@@ -58,7 +55,9 @@ export const coursesRoutes: Routes = [
 ];
 
 const entityMetada: EntityMetadataMap = {
-  Course: {},
+  Course: {
+    sortComparer: compareCourses,
+  },
 };
 
 @NgModule({
@@ -94,7 +93,7 @@ const entityMetada: EntityMetadataMap = {
     CoursesCardListComponent,
     EditCourseDialogComponent,
     CourseComponent,
-    CourseDataService,
+    CoursesDataService,
   ],
   providers: [CoursesHttpService, CoursesResolver, CourseEntityService],
 })
