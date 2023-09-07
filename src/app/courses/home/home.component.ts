@@ -29,7 +29,6 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private store: Store<AppState>,
     private coursesService: CourseEntityService
   ) {}
 
